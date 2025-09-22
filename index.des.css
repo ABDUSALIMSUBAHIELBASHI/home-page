@@ -1,0 +1,23 @@
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: hsl(0, 30%, 72%);
+    }
+
+    .content{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      max-width: 100px;
+      width: 90%;
+      height: 90%;
+    }
+    img {
+      border-radius: %};
+
+  
+
