@@ -3,17 +3,16 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: #f9f9f9;
+  color: oklab(19.503999999999998% -0.00096 -0.00239);
+  background-color: lab(99.73% 0.33 0.11);
 }
-
 h1, h2 {
-  color: #222;
+  color: lab(3.3% -0.51 3.29);
   text-align: center;
 }
 
 nav {
-  background: #333;
+  background: lab(1.59% 4.69 1.65);
   padding: 1rem;
 }
 
@@ -24,28 +23,23 @@ nav ul {
   padding: 0;
   margin: 0;
 }
-
 nav ul li {
   margin: 0 15px;
 }
-
 nav ul li a {
-  color: #fff;
+  color: oklch(87.23% 0.21816 125.197);
   text-decoration: none;
   font-weight: bold;
 }
 
 nav ul li a:hover {
-  color: #f4b400;
+  color: lab(69.89% -66.59 65.41);
 }
-
 section {
   padding: 50px 20px;
   max-width: 900px;
   margin: auto;
 }
-
-
 .intro {
   text-align: center;
 }
@@ -55,11 +49,9 @@ section {
   border-radius: 6%;
   margin-bottom: 15px;
 }
-
 .intro span {
-  color: #f4b400;
+  color: lab(3.74% -0.06 4.36);
 }
-
 
 .skills-list {
   display: flex;
@@ -71,10 +63,10 @@ section {
 }
 
 .skills-list li {
-  background: #f4b400;
+  background: lab(63.46% -28.33 -20.99);
   padding: 10px 20px;
   border-radius: 20px;
-  color: #fff;
+  color: hwb(0 100% 0%);
   font-weight: bold;
 }
 
@@ -91,24 +83,23 @@ form input, form textarea, form button {
   padding: 10px;
   font-size: 1rem;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid hwb(0 80% 20%);
 }
 
 form button {
-  background: #333;
+  background: lch(0.9% 1.66 19.4);
   color: #fff;
   cursor: pointer;
 }
 
 form button:hover {
-  background: #f4b400;
+  background: #c79b9b;
 }
-
-
 footer {
   text-align: center;
   padding: 15px;
-  background: #333;
-  color: #fff;
+  background: lab(1.47% 5.35 1.88);
+  color: lab(73.29% 6.11 74.77);
   margin-top: 30px;
-}
+
+} 
