@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local LLM Chat Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.0/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        .chat-container::-webkit-scrollbar, .history-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-thumb, .history-container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 3px;
+        }
+        .chat-container::-webkit-scrollbar-track, .history-container::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+        .message pre {
+            background-color: #27272a;
+            color: #d4d4d8; 
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="flex h-screen overflow-hidden">
+        <aside id="sidebar" class="bg-gray-800 text-white w-64 p-4 flex-shrink-0 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 absolute md:relative z-20 h-full">
+            <button id="close-sidebar-btn" class="absolute top-2 right-2 text-white p-1 md:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <button id="new-chat-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg mb-4 flex items-center justify-center transition duration-150 shadow-md">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                New Chat
+            </button>
+
+            <div class="mb-4 space-y-2">
+                <label for="theme-select" class="block text-sm font-medium text-gray-400">Theme</label>
+                <select id="theme-select" class="w-full bg-gray-700 text-white p-2 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+            </div>
+
+            <div class="flex-1 overflow-y-auto mb-4 space-y-2" id="history-container">
+                <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">History</h3>
+                <p class="text-gray-500 text-sm italic">No history yet.</p>
+            </div>
+
+            <div class="border-t border-gray-700 pt-4 space-y-3">
+                <button id="contact-toggle-btn" class="w-full text-sm text-center text-gray-300 hover:text-indigo-400 transition">
+                    Contact & About
+                </button>
+
+                <button id="clear-storage-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center transition duration-150 shadow-md">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    Clear All Data
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col relative">
+            <header class="md:hidden bg-white dark:bg-gray-800 shadow p-4 flex justify-between items-center z-10">
+                <button id="open-sidebar-btn" class="text-gray-800 dark:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Local LLM Chat</h2>
+            </header>
+
+            <div id="chat-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 chat-container">
+                <div id="welcome-screen" class="max-w-xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg text-center dark:text-gray-200">
+                    <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">LLM Chat Interface</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Start a conversation. This template features **Tailwind CSS**, **Local Storage**, and is fully **Responsive**.</p>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sticky bottom-0">
+                <div id="image-preview" class="flex items-center space-x-2 mb-2"></div>
+                
+                <div class="flex items-end space-x-3">
+                    <textarea id="user-input" placeholder="Type your message..." rows="1" class="flex-1 p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl resize-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150" style="max-height: 200px;"></textarea>
+                    
+                    <input type="file" id="file-input" accept="image/*" class="hidden">
+                    <button id="attach-button" title="Attach image" class="p-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl transition duration-150">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                    </button>
+                    
+                    <button id="send-button" class="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl disabled:bg-indigo-400 transition duration-150" disabled>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7-7l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="contact-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm relative">
+            <h3 class="text-2xl font-bold mb-4 text-gray-800 dark:text-white">Contact Information</h3>
+            <button id="close-contact-modal-btn" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <form action="#" method="POST" onsubmit="alert('Form submission simulated. Data: ' + new FormData(this)); return false;" class="space-y-4">
+                <div>
+                    <label for="contact-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                    <input type="email" id="contact-email" name="email" value="salimabdu759@gmail.com" readonly class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <div>
+                    <label for="contact-mobile" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Mobile</label>
+                    <input type="text" id="contact-mobile" name="mobile" value="+250739390715" readonly class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <div>
+                    <label for="contact-location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Location</label>
+                    <input type="text" id="contact-location" name="location" value="RWANDA-KIGALI" readonly class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Simulate Action
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="confirmation-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm text-center">
+            <h3 class="text-xl font-bold mb-4 text-red-600 dark:text-red-400">Clear All Data</h3>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">Are you sure you want to clear all chat history and settings? This action cannot be undone.</p>
+            <div class="flex justify-between space-x-4">
+                <button id="modal-cancel" class="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    Cancel
+                </button>
+                <button id="modal-confirm" class="flex-1 py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg transition">
+                    Clear Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const chatContainer = document.getElementById('chat-container');
+    const newChatBtn = document.getElementById('new-chat-btn');
+    const themeSelect = document.getElementById('theme-select');
+    const clearStorageBtn = document.getElementById('clear-storage-btn');
+    const modal = document.getElementById('confirmation-modal');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const fileInput = document.getElementById('file-input');
+    const attachButton = document.getElementById('attach-button');
+    const imagePreview = document.getElementById('image-preview');
+    const sidebar = document.getElementById('sidebar');
+    const openSidebarBtn = document.getElementById('open-sidebar-btn');
+    const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+    const historyContainer = document.getElementById('history-container');
+    const contactModal = document.getElementById('contact-modal');
+    const contactToggleBtn = document.getElementById('contact-toggle-btn');
+    const closeContactModalBtn = document.getElementById('close-contact-modal-btn');
+
+    let currentChatHistory = [];
+    let chats = JSON.parse(localStorage.getItem('chats')) || [];
+    let currentChatId = null;
+
+
+    function saveState() {
+        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+
+        if (currentChatHistory.length > 0) {
+            let chatIndex = chats.findIndex(c => c.id === currentChatId);
+            if (chatIndex === -1) {
+                const chatName = currentChatHistory[0].text.substring(0, 30) + '...';
+                const newChat = {
+                    name: chatName,
+                    id: Date.now(),
+                    history: currentChatHistory
+                };
+                chats.push(newChat);
+                currentChatId = newChat.id;
+            } else {
+                chats[chatIndex].history = currentChatHistory;
+            }
+        }
+        localStorage.setItem('chats', JSON.stringify(chats));
+    }
+
+    function renderMath(element) {
+        renderMathInElement(element, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false}
+            ]
+        });
+    }
+
+    function loadState() {
+    
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        themeSelect.value = savedTheme;
+
+        if (chats.length > 0) {
+            loadChat(chats[chats.length - 1].id, false); 
+        } else {
+            currentChatId = null;
+            currentChatHistory = [];
+        }
+
+        renderHistoryList();
+    }
+
+
+    function setTheme(theme) {
+        document.body.classList.remove('light', 'dark');
+        document.body.classList.add(theme);
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    }
+
+    themeSelect.addEventListener('change', (e) => setTheme(e.target.value));
+
+
+
+    function startNewChat() {
+        saveState();
+
+        currentChatHistory = [];
+        currentChatId = null;
+        chatContainer.innerHTML = '<div id="welcome-screen" class="max-w-xl mx-auto mt-10 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg text-center dark:text-gray-200"><h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">LLM Chat Interface</h1><p class="text-gray-600 dark:text-gray-400">Start a new conversation.</p></div>';
+        renderHistoryList();
+    }
+
+    function renderHistoryList() {
+        historyContainer.innerHTML = '<h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">History</h3>';
+        if (chats.length === 0) {
+            historyContainer.innerHTML += '<p class="text-gray-500 text-sm italic">No history yet.</p>';
+            return;
+        }
+
+        chats.slice().reverse().forEach(chat => {
+            const btn = document.createElement('button');
+            btn.className = `w-full text-left py-2 px-3 text-sm text-gray-300 hover:bg-gray-700 rounded-lg transition duration-150 truncate ${chat.id === currentChatId ? 'bg-gray-700' : ''}`;
+            btn.textContent = chat.name;
+            btn.dataset.chatId = chat.id;
+            btn.addEventListener('click', () => loadChat(chat.id));
+            historyContainer.appendChild(btn);
+        });
+    }
+
+    function loadChat(chatId, shouldSaveCurrent = true) {
+        if (shouldSaveCurrent) {
+            saveState();
+        }
+
+        const chat = chats.find(c => c.id === chatId);
+        if (chat) {
+            currentChatId = chatId;
+            currentChatHistory = chat.history;
+            chatContainer.innerHTML = '';
+            currentChatHistory.forEach(msg => addMessageToDOM(msg.text, msg.type, false));
+            renderMath(chatContainer);
+            renderHistoryList(); 
+        }
+        if (window.innerWidth < 768) {
+            sidebar.classList.add('-translate-x-full');
+        }
+    }
+
+
+   
+
+    function addMessageToDOM(message, type, scroll = true) {
+        const div = document.createElement('div');
+        div.className = `message max-w-[90%] md:max-w-[70%] p-3 rounded-xl shadow-md ${
+            type === 'user'
+                ? 'bg-indigo-600 text-white self-end ml-auto rounded-br-none'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 self-start mr-auto rounded-tl-none'
+        }`;
+        div.innerHTML = marked.parse(message);
+        chatContainer.appendChild(div);
+
+        if (scroll) {
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+        }
+    }
+
+    function addMessage(text, type) {
+        const welcome = document.getElementById('welcome-screen');
+        if (welcome) welcome.remove();
+
+        addMessageToDOM(text, type);
+        currentChatHistory.push({ text, type });
+        saveState(); 
+    }
+
+    function simulateBotResponse(text) {
+        let botResponse = `Hello! I received your message: **"${text}"**.\n\n`;
+        let responded = false;
+
+        if (text.toLowerCase().includes('equation')) {
+            botResponse += "Here is an example of a formula using $\\LaTeX$:\n\n";
+            botResponse += "$$E = mc^2$$ \n\n";
+            botResponse += "This is Einstein's famous mass-energy equivalence equation.\n\n";
+            responded = true;
+        }
+
+        if (text.toLowerCase().includes('tailwind')) {
+            botResponse += "Tailwind CSS is a utility-first CSS framework. This interface is built with it!\n\n";
+            botResponse += "Here is a simple example of a utility class:\n\n";
+            botResponse += "```html\n<button class=\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\">\n  Click Me\n</button>\n```\n";
+            responded = true;
+        }
+
+        if (!responded) {
+            botResponse += "I'm running a local simulation for now. Try asking about **Tailwind** or an **equation**!";
+        }
+
+        setTimeout(() => {
+            addMessage(botResponse, 'bot');
+            renderMath(chatContainer);
+        }, 800);
+    }
+
+    userInput.addEventListener('input', () => {
+        userInput.style.height = 'auto'; 
+        userInput.style.height = (userInput.scrollHeight) + 'px';
+        sendButton.disabled = !userInput.value.trim() && imagePreview.innerHTML === '';
+    });
+
+    sendButton.addEventListener('click', () => {
+        const text = userInput.value.trim();
+        const hasImage = imagePreview.innerHTML !== '';
+
+        if (!text && !hasImage) return;
+
+        let userMsg = text;
+        if (hasImage) {
+            userMsg = `[Image attached - Placeholder] ${text}`;
+        }
+
+        addMessage(userMsg, 'user');
+        simulateBotResponse(text);
+
+        userInput.value = '';
+        userInput.style.height = 'auto';
+        sendButton.disabled = true;
+        imagePreview.innerHTML = '';
+        fileInput.value = '';
+    });
+
+    newChatBtn.addEventListener('click', startNewChat);
+
+    clearStorageBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    modalCancel.addEventListener('click', () => modal.classList.add('hidden'));
+    modalConfirm.addEventListener('click', () => {
+        localStorage.clear();
+        chats = [];
+        currentChatHistory = [];
+        currentChatId = null;
+        startNewChat(); 
+        modal.classList.add('hidden');
+        setTheme('light'); 
+    });
+
+    attachButton.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.className = 'w-16 h-16 object-cover rounded-lg border-2 border-indigo-500';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '&#x2715;';
+            removeBtn.className = 'text-red-500 font-bold ml-2 hover:text-red-700';
+            removeBtn.title = 'Remove image';
+            removeBtn.onclick = () => {
+                imagePreview.innerHTML = '';
+                fileInput.value = '';
+                sendButton.disabled = !userInput.value.trim();
+            };
+
+            imagePreview.innerHTML = '';
+            imagePreview.appendChild(img);
+            imagePreview.appendChild(removeBtn);
+            sendButton.disabled = false;
+        }
+        reader.readAsDataURL(file);
+    });
+
+
+    openSidebarBtn.addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
+    closeSidebarBtn.addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
+
+    contactToggleBtn.addEventListener('click', () => contactModal.classList.remove('hidden'));
+    closeContactModalBtn.addEventListener('click', () => contactModal.classList.add('hidden'));
+
+
+    loadState();
+    if (chatContainer.querySelector('#welcome-screen') === null) {
+      
+        renderMath(chatContainer);
+    }
+</script>
+</body>
+</html>
