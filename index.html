@@ -1,303 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Mask Portfolio</title>
-  <link rel="stylesheet" href="index.des.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdu Salim | Portfolio 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00d4ff; /* Cyan */
+            --secondary: #7000ff; /* Purple */
+            --bg: #0f172a; /* Dark Blue/Black */
+            --surface: #1e293b; /* Card color */
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Arabic Font Support */
+        body.rtl {
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Language Switcher */
+        .lang-switch select {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--primary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10%;
+            padding-top: 80px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            max-width: 500px;
+        }
+
+        .hero-btns button {
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            margin-right: 15px;
+        }
+        
+        body.rtl .btn-primary { margin-right: 0; margin-left: 15px; }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary) !important;
+            color: var(--primary);
+        }
+
+        .hero-img {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-img img {
+            width: 350px;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Organic shape */
+            border: 4px solid var(--primary);
+            animation: morph 5s ease-in-out infinite;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+        }
+
+        @keyframes morph {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+            100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+        }
+
+        /* --- Sections General --- */
+        section {
+            padding: 5rem 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .section-title .line {
+            width: 100px;
+            height: 4px;
+            background: var(--primary);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* --- About Grid --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        /* --- Skills --- */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: 1px solid var(--primary);
+        }
+
+        /* --- Services --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* --- Contact --- */
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4rem;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .info-item i {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-form {
+            flex: 1.5;
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg);
+            border: 1px solid #333;
+            color: white;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+                height: auto;
+                padding-top: 120px;
+                padding-bottom: 50px;
+            }
+
+            .hero-text {
+                margin-top: 30px;
+            }
+
+            .hero h1 { font-size: 2.5rem; }
+            
+            .nav-links {
+                display: none; /* Add JS hamburger menu for real mobile */
+            }
+            
+            .contact-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <nav> 
-       <img src="j.jpeg" alt="" height="200px" width="200px">
-  <Nav>
-    <Ul>
-      <h1>  
 
-      </h1>
-       
-      <li><a href="#home page">home page</a>
-      <li><a href="#services">services</a>
-      <li><a href="#skills">skills</a>
-      <li><a href="# CONTACT "> CONTACT </a>
-      <li><a href="#EDCUATION">EDCUATION</a>
-      <li><a href="#long in">long in</a>
-      <li><a href="#sing up">sing up</a>
-      
-    </Ul>
-  </Nav>
+    <nav>
+        <div class="logo">ABDU<span style="color:white">.DEV</span></div>
+        <ul class="nav-links">
+            <li><a href="#home" data-key="nav-home">Home</a></li>
+            <li><a href="#about" data-key="nav-about">About</a></li>
+            <li><a href="#skills" data-key="nav-skills">Skills</a></li>
+            <li><a href="#services" data-key="nav-services">Services</a></li>
+            <li><a href="#contact" data-key="nav-contact">Contact</a></li>
+        </ul>
+        <div class="lang-switch">
+            <select onchange="setLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="ar">العربية</option>
+            </select>
+        </div>
+    </nav>
 
+    <section id="home" class="hero">
+        <div class="hero-text">
+            <h3 data-key="hero-intro">Hello, I am</h3>
+            <h1 data-key="hero-name">Abdu Salim</h1>
+            <p data-key="hero-desc">Full Stack Web Developer, Educator, and Digital Creative based in Kigali, Rwanda.</p>
+            <div class="hero-btns">
+                <button class="btn-primary" onclick="location.href='#contact'" data-key="btn-hire">Hire Me</button>
+                <button class="btn-outline" onclick="location.href='#about'" data-key="btn-cv">View Info</button>
+            </div>
+        </div>
+        <div class="hero-img">
+            <img src="b.jpeg" alt="Abdu Salim">
+        </div>
+    </section>
 
-  <section id="home page">
-    <h1> 
-    <li class="home page-A">home
-      </h1>
-    <fieldset>
-      <legend></legend>
-    <p>-I from; sudan
--I was born in ; 1/1/1996 in lagawa state
--In sudan  <ul>
-</ul>but Iam muslim and my tribe is
--Dajub i have degree in Englis language
--I used to be teacher of lower primaryschool <ul>
-</ul>
--Iam married to <ul>
-</ul>
--I finished secondaryschool even university
--From sudan <ul>
-</ul> but i have course differernt
--And Experience course and activity skill <ul>
-</ul>
--a COURSE COMPUTER LANGUAGER & HUMAN RESOURCES DEVELOPMENT <ul>
-</ul>
-● SUBJECT
-● SKILL
-● - introduction
-● - ms- windows xp
-● - ms- word 2007
-● - ms- Excel 2007
-● - ms-power point 2007
-● - ms- Access 2007
-● - internet <ul>
-</ul>
--b COURSE TEACHER TRAAINING & HUMAN DEVELOPMENT ORGANAZATION
-● SUBJECT
-● TOPICSu
-● -a class mangemert teacher aids
-● -b teacher methodology
-● -c children with species needs using
-● -d school enviroment
-● -e Running schoolwell clubs and societies
--C COURSE ATTENDED A TRAINING COURSE IN FIRS AID
--D COURSE CERTIFICATE OF THE DRIVER IN SUDAN I WAS ADRIVER OF SMALL CAR
-LIKE TAX IN GENERAL CARS I WAS DRIVERING
--E COURSE CODING <ul>
-</ul>
-● EXPERIENCE
-● SKILL
-● W3 SCHOOL.com
-● CODE                    <button>look in <a href="
-https://www.wearealight.org
-" target wearealight="wearealight_blank">
-wearealight
-</a>wearealight my</button></p>
-       </li>
-       </fieldset>
+    <section id="about">
+        <div class="section-title">
+            <h2 data-key="nav-about">About Me</h2>
+            <div class="line"></div>
+        </div>
+        <div class="about-grid">
+            <div class="card">
+                <h3 data-key="about-bg-title">Background</h3>
+                <p data-key="about-bg-text">Originally from Lagawa, Sudan. I have a diverse background ranging from teaching primary school to humanitarian work. I am currently based in Kigali, Rwanda.</p>
+            </div>
+            <div class="card">
+                <h3 data-key="about-edu-title">Education</h3>
+                <p data-key="about-edu-text">Degree in English Language. Recent graduate of the General Assembly Web Development Immersive (2025). Certified in Computer Languages & HR Development.</p>
+            </div>
+            <div class="card">
+                <h3 data-key="about-exp-title">Experience</h3>
+                <p data-key="about-exp-text">Former Educator & Driver. Currently developing web solutions and working with digital content. Active on GitHub and tech communities.</p>
+            </div>
+        </div>
+    </section>
 
+    <section id="skills">
+        <div class="section-title">
+            <h2 data-key="nav-skills">Technical Skills</h2>
+            <div class="line"></div>
+        </div>
+        <div class="skills-container">
+            <div class="skill-tag">HTML5 & CSS3</div>
+            <div class="skill-tag">JavaScript (ES6+)</div>
+            <div class="skill-tag">React.js</div>
+            <div class="skill-tag">Node.js</div>
+            <div class="skill-tag">Python</div>
+            <div class="skill-tag">Git & GitHub</div>
+            <div class="skill-tag">MS Office Suite</div>
+            <div class="skill-tag">UI/UX Basics</div>
+        </div>
+    </section>
 
     <section id="services">
-      <h1>
-        <li class="services"> services
-      </h1>
+        <div class="section-title">
+            <h2 data-key="nav-services">Services</h2>
+            <div class="line"></div>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-code"></i>
+                <h3 data-key="srv-web">Web Development</h3>
+                <p data-key="srv-web-desc">Building responsive, modern websites using HTML, CSS, JS, and React.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-bullhorn"></i>
+                <h3 data-key="srv-marketing">Digital Marketing</h3>
+                <p data-key="srv-marketing-desc">Social media management, SEO consulting, and content creation.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3 data-key="srv-tutoring">Tutoring & Consulting</h3>
+                <p data-key="srv-tutoring-desc">Teaching coding basics, English language, and digital literacy skills.</p>
+            </div>
+        </div>
     </section>
-    <legend></legend>
-    <fieldset>
-    <p>          <Li> Online & Digital Services
-Social media management (help businesses grow on Instagram, TikTok, etc.)
-<a href="https://www.Google.com">emagil mr  salimabdu759@gmail.com Google</a>-And <a href="https://www.youtube.com">my youtube</a>
-Website design & development (simple sites for small businesses)
-Content creation (videos, blogs, podcasts)
-SEO consulting (help sites rank on Google)
-Virtual assistant work (email, scheduling, admin tasks)
-Creative Services
-Graphic design logos, branding, marketing materials
-Photography & editing (events, products, portraits)
-Custom illustrations (for books, merchandise, or branding)
-Copywriting (ads, product descriptions, storytelling)
-Local / Physical Service
-Home cleaning & organization
-Pet walking / sitting
-Delivery & errand running
-Event planning (parties, weddings, corporate events)
-Handyman services (repairs, furniture assembly)
-Educational & Consulting
-Tutoring / coaching (academic, fitness, career, language learning)
-Business consulting (helping small businesses improve processes)
-Workshops / classes (cooking, art, coding, financial literacy)
-To make these ideas “good,” the key is to match your skills 
-with what people in your area (or online) need most.
-Do you want me to suggest service ideas you can start online
- (low-cost, global reach) or local in-person services? 
- </fieldset>                   
-       </li>
-       </fieldset>
 
-     <section id="skills">
-    <h1> 
-    <li class="skills page-c">akills
-      </h1>
-    <fieldset>
-      <legend> </legend>
-    <p>       <li>HTML & CSS</li>
-      <li>JavaScript</li>
-      <li>Responsive Design</li>
-      <li>UI/UX Basics</li>
-      <li>Technical Skills
-        <Fieldset> 
-       <legend></legend>
-Programming: Python, Java, JavaScript, SQLZ
-Tools: Git, Docker, AWS, Kubernetes
-Web Development: React, Node.js, REST APIs
-Data: Pandas, NumPy, Tableau</li>                  
-       </li>
-       </fieldset>
-
-        <section id=" CONTACT">
-    <h1>
-    <li class="CONTACT page-d">CONTACT
-       </h1>
-      </section>
-    <fieldset>
-      <legend></legend>
-    <p>   <li><a href="https://www.email.com">Email</a></li>
-      <li><a href="https://www.github.com">github</a></li>
-      <li><a href="https://www.linkedin.com">linkedin</a></li>
-      <li><a href="https://www.whatsapp.com">my whatsapp</a></li>
-      <li>salimabdu759gmail.com</li>
-      <li>mobile:+250739390715 whatsapp:+250735281339</li>
-      <li>loacion -KIGALI- RWANDA</li>
-    </ul> 
-        <Li>HTML & CSS</Li>
-        <Li>JavaScript</Li>
-      <li>Responsive Design</li>
-        <Li>● - ms-power point 2007</Li>
-        <li>● - introduction</Li>
-            <li>● - internet</Li>
-              </fieldset>
-</section>
-              </Ul>
-              <fieldset>
-              <legend>page-j software Engineer</legend>
-              <li>Software Engineer
-Tech Solutions Inc.  San Francisco, CA | Jun 2025 Dec 2026
-Designed and implemented REST APIs used by over 1M active users
-Reduced system downtime by 40% by optimizing cloud infrastructure.
-Mentored 2 junior developers, improving team productivity and code quality.</li>
-     <a href="https://www.fiverr.com">fiverr</a>
-      <a href="https://www.canva.com">canva</a>
-      <a href="https://www.figma.com">figma</a>
-       </li>
-       </fieldset>
-
-        <section id="EDCUATION">
-    <h1> 
-    <li class="page ">EDCUATION
-      </h1>
-    <fieldset>
-      <legend></legend>
-    <p>       <Li>-I finished secondaryschool even university
--From sudan </Li>
-<Li>- i hove a COURSE COMPUTER 
-  LANGUAGER & HUMAN 
-  RESOURCES DEVELOPMENT</Li>
-<Li>● SUBJECT
-● SKILL
-● - introduction
-● - ms- windows xp
-● - ms- word 2007
-● - ms- Excel 2007
-● - ms-power point 2007
-● - ms- Access 2007
-● - internet</Li>
-<li>Diploma in Web Development
-General Assembly — Online Bootcamp
-Completed: 2025
-Skills: HTML, CSS, JavaScript, React, Node.js
-Built and deployed 2full-stack projects</li>
-<Li>welcome to w3school <a href="https://www.w3schools.com">w3school html</a></Li>                   
-       </li>
-       </fieldset>
-        <section id="long in">
-    <h1>
-    <li class="long in page-j">long in
-       </h1>
-    <fieldset>
-      <legend></legend>
-    <p>  i hove a COURSE COMPUTER 
-  LANGUAGER & HUMAN 
-  RESOURCES DEVELOPMENT</Li>
-<Li>● SUBJECT
-● SKILL
-● - introduction
-● - ms- windows xp
-● - ms- word 2007
-● - ms- Excel 2007
-● - ms-power point 2007
-● - ms- Access 2007
-● - internet</Li>
-<li>Diploma in Web Development
-General Assembly — Online Bootcamp
-Completed: 2025
-Skills: HTML, CSS, JavaScript, React, Node.js
-Built and deployed 2full-stack projects</li>
-<Li>welcome to w3school  if you feel most at peace outdoors.
-Be long in career / investment / commitmen
-A good idea to be long in is renewable energy → solar, wind, EV tech are growing fast.
-Another is AI and automation → big opportunities 
-over the next decade.
-
-Or health & wellness industries → people are
- investing more in physical and mental well-being.
-3
-A long idea (something deep & detailed)
-Starting a sustainable clothing brand that uses recycled materials and creates jobs for local communities.
-Building a platform for online learning that makes high-quality courses affordable worldwide.
-Creating a tech-enabled farming solution (like smart greenhouses) to help feed the future.
- Which direction feels closer to what you meant — community/lifestyle, career/investment, or a detailed project idea?</li>                
-       </li>
-       </fieldset>
-        <section id="sing up">
-    <h1> 
-    <li class="sing up page-h">sing up
-      </h1>
-    <fieldset>
-      <legend></legend>
-       Belong in (community / lifestyle) <fieldset> 
-        <legend></legend>
-You might belong in a creative community (like art, writing, or design groups) if you enjoy expressing ideas.
-You might belong in a tech/startup circle if you like building new things and solving problems.
-You might belong in nature-focused communities (like hiking or gardening groups) if you feel most at peace outdoors.
-Be long in career / investment / commitmen
-A good idea to be long in is renewable energy → solar, wind, EV tech are growing fast.
-Another is AI and automation → big opportunities over the next decade.
-Or health & wellness industries → people are investing more in physical and mental well-being.
-3
-A long idea (something deep & detailed)
-Starting a sustainable clothing brand that uses recycled materials and creates jobs for local communities.
-Building a platform for online learning that makes high-quality courses affordable worldwide.
-Creating a tech-enabled farming solution (like smart greenhouses) to help feed the future.
- Which direction feels closer to what you meant — community/lifestyle, career/investment, or a detailed project idea?
- <Li><a href="https://www.wearealight.org/">wearealight</a>
-        </Li></fieldset>
-         </fieldset>
-         </nav>
-  <footer> 
-    <nav>
-      <fieldset> 
-        <legend></legend>
-    <P>mobile:+250739390715 whatsapp:+250735281339</P>
-    <P> KIGALI- RWANDA</P>
-    <P>Email:salimabdu759@gmail.com</P>
-    </fieldset>
-  </nav>
-  </footer></li>
-    <p>                   
-       </li>
-       </fieldset>       
-          <input type="full name :">full name:
-          </li ahref="email:">
-          </li ahref="Email">email
-          <input type="email">
-          </li ahref="passwead">passwead
-          <input type="password">
-          </li ahref="phone number">
-          <input type="phone number">
-          </li ahref="phone number">phone number
-          <input type="submit">
-          <input type="checkbox">
-                </Ul>
-                </Nav>
+    <section id="contact">
+        <div class="section-title">
+            <h2 data-key="nav-contact">Contact Me</h2>
+            <div class="line"></div>
+        </div>
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>salimabdu759@gmail.com</span>
                 </div>
+                <div class="info-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>+250 739 390 715</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span data-key="location">Kigali, Rwanda</span>
+                </div>
+                <div class="info-item">
+                    <i class="fab fa-linkedin"></i>
+                    <span>Abdu Salim</span>
+                </div>
+            </div>
+
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent successfully!');">
+                <div class="form-group">
+                    <input type="text" data-ph="ph-name" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" data-ph="ph-email" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <textarea rows="5" data-ph="ph-msg" placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%" data-key="btn-send">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        const translations = {
+            en: {
+                "nav-home": "Home",
+                "nav-about": "About",
+                "nav-skills": "Skills",
+                "nav-services": "Services",
+                "nav-contact": "Contact",
+                "hero-intro": "Hello, I am",
+                "hero-name": "Abdu Salim",
+                "hero-desc": "Full Stack Web Developer, Educator, and Digital Creative based in Kigali, Rwanda.",
+                "btn-hire": "Hire Me",
+                "btn-cv": "View Info",
+                "about-bg-title": "Background",
+                "about-bg-text": "Originally from Lagawa, Sudan. I have a diverse background ranging from teaching primary school to humanitarian work. I am currently based in Kigali, Rwanda.",
+                "about-edu-title": "Education",
+                "about-edu-text": "Degree in English Language. Recent graduate of the General Assembly Web Development Immersive (2025). Certified in Computer Languages & HR Development.",
+                "about-exp-title": "Experience",
+                "about-exp-text": "Former Educator & Driver. Currently developing web solutions and working with digital content. Active on GitHub and tech communities.",
+                "srv-web": "Web Development",
+                "srv-web-desc": "Building responsive, modern websites using HTML, CSS, JS, and React.",
+                "srv-marketing": "Digital Marketing",
+                "srv-marketing-desc": "Social media management, SEO consulting, and content creation.",
+                "srv-tutoring": "Tutoring & Consulting",
+                "srv-tutoring-desc": "Teaching coding basics, English language, and digital literacy skills.",
+                "location": "Kigali, Rwanda",
+                "btn-send": "Send Message",
+                "ph-name": "Full Name",
+                "ph-email": "Email Address",
+                "ph-msg": "Your Message"
+            },
+            fr: {
+                "nav-home": "Accueil",
+                "nav-about": "À Propos",
+                "nav-skills": "Compétences",
+                "nav-services": "Services",
+                "nav-contact": "Contact",
+                "hero-intro": "Bonjour, je suis",
+                "hero-name": "Abdu Salim",
+                "hero-desc": "Développeur Web Full Stack, Éducateur et Créatif Numérique basé à Kigali, Rwanda.",
+                "btn-hire": "Engagez-moi",
+                "btn-cv": "Voir Infos",
+                "about-bg-title": "Contexte",
+                "about-bg-text": "Originaire de Lagawa, Soudan. J'ai un parcours diversifié allant de l'enseignement primaire au travail humanitaire. Je suis actuellement basé à Kigali.",
+                "about-edu-title": "Éducation",
+                "about-edu-text": "Diplôme en langue anglaise. Récemment diplômé de General Assembly en développement Web (2025). Certifié en langages informatiques.",
+                "about-exp-title": "Expérience",
+                "about-exp-text": "Ancien éducateur et chauffeur. Actuellement développeur de solutions web et créateur de contenu numérique. Actif sur GitHub.",
+                "srv-web": "Développement Web",
+                "srv-web-desc": "Création de sites web modernes et réactifs utilisant HTML, CSS, JS et React.",
+                "srv-marketing": "Marketing Numérique",
+                "srv-marketing-desc": "Gestion des réseaux sociaux, conseil SEO et création de contenu.",
+                "srv-tutoring": "Tutorat & Conseil",
+                "srv-tutoring-desc": "Enseignement des bases du code, de l'anglais et des compétences numériques.",
+                "location": "Kigali, Rwanda",
+                "btn-send": "Envoyer",
+                "ph-name": "Nom Complet",
+                "ph-email": "Adresse Email",
+                "ph-msg": "Votre Message"
+            },
+            ar: {
+                "nav-home": "الرئيسية",
+                "nav-about": "من أنا",
+                "nav-skills": "المهارات",
+                "nav-services": "خدماتي",
+                "nav-contact": "تواصل معي",
+                "hero-intro": "مرحباً، أنا",
+                "hero-name": "عبده سالم",
+                "hero-desc": "مطور ويب شامل، معلم، ومبدع رقمي مقيم في كيغالي، رواندا.",
+                "btn-hire": "وظفني",
+                "btn-cv": "المزيد من المعلومات",
+                "about-bg-title": "خلفيتي",
+                "about-bg-text": "أصلي من لقاوة، السودان. لدي خلفية متنوعة تتراوح بين تدريس المدارس الابتدائية والعمل الإنساني. أنا حالياً مقيم في كيغالي، رواندا.",
+                "about-edu-title": "التعليم",
+                "about-edu-text": "درجة في اللغة الإنجليزية. خريج حديث من دورة تطوير الويب من General Assembly (2025). معتمد في لغات الحاسوب وتنمية الموارد البشرية.",
+                "about-exp-title": "الخبرة",
+                "about-exp-text": "معلم وسائق سابق. أقوم حالياً بتطوير حلول الويب والعمل مع المحتوى الرقمي. نشط في مجتمعات التقنية.",
+                "srv-web": "تطوير الويب",
+                "srv-web-desc": "بناء مواقع ويب حديثة ومتجاوبة باستخدام HTML و CSS و JS و React.",
+                "srv-marketing": "التسويق الرقمي",
+                "srv-marketing-desc": "إدارة وسائل التواصل الاجتماعي، استشارات SEO، وإنشاء المحتوى.",
+                "srv-tutoring": "التدريس والاستشارات",
+                "srv-tutoring-desc": "تعليم أساسيات البرمجة، اللغة الإنجليزية، والمهارات الرقمية.",
+                "location": "كيغالي، رواندا",
+                "btn-send": "إرسال الرسالة",
+                "ph-name": "الاسم الكامل",
+                "ph-email": "البريد الإلكتروني",
+                "ph-msg": "رسالتك"
+            }
+        };
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll("[data-key]");
+            const placeholders = document.querySelectorAll("[data-ph]");
+            const body = document.body;
+
+            // Handle Text Content
+            elements.forEach(el => {
+                const key = el.getAttribute("data-key");
+                if (translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+
+            // Handle Placeholders
+            placeholders.forEach(el => {
+                const key = el.getAttribute("data-ph");
+                if (translations[lang][key]) {
+                    el.setAttribute("placeholder", translations[lang][key]);
+                }
+            });
+
+            // Handle Arabic RTL (Right to Left)
+            if (lang === 'ar') {
+                body.classList.add('rtl');
+            } else {
+                body.classList.remove('rtl');
+            }
+        }
+    </script>
 </body>
 </html>
